@@ -42,24 +42,30 @@ namespace _GAME.Scripts.Cannon
             {
                 return;
             }
-            if (Input.GetMouseButtonDown(0))
+            
+            if (Input.touchCount > 1)
             {
-                var bulletPool = _pool.GetPool<BulletsPool>();
-                var bullet = bulletPool.GetItem() as BulletLogic;
-                if (bullet != null)
+                var touch = Input.GetTouch(1);
+                if (touch.phase == TouchPhase.Began)
                 {
-                    cameraFeedback.ShakeCamera();
-                    VisualShoot();
-
-                    _tickableSystem.AddToList(bullet);
-                    var power = _trajectory.Power;
-                    var direction = _trajectory.GetTrajectoryPositions();
-                    bullet.Shoot(direction, power);
-                    
-                    bullet.OnDie += OnDieEvent;
-                    bullet.OnRicochet += OnRicochetEvent;
-
+                    var bulletPool = _pool.GetPool<BulletsPool>();
+                    var bullet = bulletPool.GetItem() as BulletLogic;
+            
+                    if (bullet != null)
+                    {
+                        cameraFeedback.ShakeCamera();
+                        VisualShoot();
+                
+                        _tickableSystem.AddToList(bullet);
+                        var power = _trajectory.Power;
+                        var direction = _trajectory.GetTrajectoryPositions();
+                        bullet.Shoot(direction, power);
+                
+                        bullet.OnDie += OnDieEvent;
+                        bullet.OnRicochet += OnRicochetEvent;
+                    }
                 }
+               
             }
         }
 

@@ -23,7 +23,7 @@ namespace _GAME.Scripts.Bullet
             Vector3[] vertices = mesh.vertices;
             for (int i = 0; i < vertices.Length; i++)
             {
-                Vector3 randomDeformation = Random.insideUnitSphere * 2;
+                Vector3 randomDeformation = Random.insideUnitSphere * .2f;
                 vertices[i] = Vector3.Lerp(vertices[i], _originalVertices[i] + randomDeformation, Time.deltaTime * 10);
             }
             mesh.vertices = vertices;

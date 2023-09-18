@@ -18,18 +18,23 @@ namespace _GAME.Scripts.Cannon
 
         public void Tick(float time)
         {
-            if (Input.GetMouseButton(0))
+            if (Input.touchCount > 0)
             {
-                float mouseX = Input.GetAxis("Mouse X");
-                float mouseY = -Input.GetAxis("Mouse Y");
+                Touch touch = Input.GetTouch(0); 
+                
+                if (touch.phase == TouchPhase.Moved)
+                {
+                    float mouseX = Input.GetAxis("Mouse X");
+                    float mouseY = -Input.GetAxis("Mouse Y");
 
-                float rotationY = transform.localEulerAngles.y + mouseX * sensitivity;
+                    float rotationY = transform.localEulerAngles.y + mouseX * sensitivity;
 
-                float rotationX = transform.localEulerAngles.x + mouseY * sensitivity;
-                rotationX = Mathf.Clamp(rotationX, clampX, 360);
-                rotationY = Mathf.Clamp(rotationY, -clampY, clampY);
+                    float rotationX = transform.localEulerAngles.x + mouseY * sensitivity;
+                    rotationX = Mathf.Clamp(rotationX, clampX, 359);
+                    rotationY = Mathf.Clamp(rotationY, -clampY, clampY);
 
-                transform.localEulerAngles = new Vector3(rotationX, rotationY, 0);
+                    transform.localEulerAngles = new Vector3(rotationX, rotationY, 0);
+                }
             }
         }
     }

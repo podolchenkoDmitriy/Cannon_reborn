@@ -13,7 +13,7 @@ namespace _GAME.Scripts.Bullet
       public UnityAction<BulletLogic> OnRicochet;
       
       [SerializeField] private LayerMask mask;
-      private readonly float _startSpeed = 10.0f;
+      private readonly float _startSpeed = 10f;
       private float _currentSpeed = 10.0f;
       private int _currentPositionIndex;
       private float _power;
@@ -83,7 +83,6 @@ namespace _GAME.Scripts.Bullet
          }
          else
          {
-
             Ricochet();
          } 
       }
@@ -102,7 +101,7 @@ namespace _GAME.Scripts.Bullet
          {
             Vector3 reflect = Vector3.Reflect(ray.direction, hit.normal);
             transform.LookAt(transform.position + reflect);
-            _power *= 0.15f;
+            _power *= 0.1f;
             var poses = TrajectoryCalculation.PredictTrajectory(_power, transform, mask);
             Shoot(poses, _power);
             _currentPositionIndex = 0;

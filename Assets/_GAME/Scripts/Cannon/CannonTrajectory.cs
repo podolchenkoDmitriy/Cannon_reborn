@@ -25,7 +25,7 @@ namespace _GAME.Scripts.Cannon
             if (w != null)
             {
                 w.OnChangeValue += ChangePower;
-                Power = 0.5f;
+                Power = 0.65f;
                 w.SimulatePower(Power);
             }
         }

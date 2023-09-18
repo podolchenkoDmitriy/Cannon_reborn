@@ -17,6 +17,7 @@ namespace _GAME.Scripts.Components
 
         private void Awake()
         {
+            Application.targetFrameRate = 60;
             DOTween.SetTweensCapacity(625,250);
             
             _screenSpaceCanvas.Init();
