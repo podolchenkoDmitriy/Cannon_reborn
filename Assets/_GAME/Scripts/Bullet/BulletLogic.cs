@@ -64,9 +64,9 @@ namespace _GAME.Scripts.Bullet
       }
       public void Tick(float time)
       {
-         Move();
+         Move(time);
       }
-      private void Move()
+      private void Move(float time)
       {
          if (_currentPositionIndex < _positions.Length - 1)
          {
@@ -76,17 +76,17 @@ namespace _GAME.Scripts.Bullet
             var timeToReachPoint = distance / _currentSpeed;
             transform.LookAt(endPosition);
             transform.position = Vector3.Lerp(startPosition, endPosition, timeToReachPoint / 2f);
-            var elapsedTime = Time.deltaTime;
+            var elapsedTime = time;
             var remainingTime = timeToReachPoint - elapsedTime;
 
             if (remainingTime <= 0) _currentPositionIndex++;
          }
          else
          {
-            Ricochet();
+            Ricochet(time);
          } 
       }
-      private void Ricochet()
+      private void Ricochet(float time)
       {
          _ricochetTimes--;
          if (_ricochetTimes<=0)
@@ -97,7 +97,7 @@ namespace _GAME.Scripts.Bullet
          OnRicochet?.Invoke(this);
          Ray ray = new Ray(transform.position, transform.forward); 
          
-         if (Physics.Raycast(ray, out RaycastHit hit,Time.deltaTime*_currentSpeed + 1f,mask))
+         if (Physics.Raycast(ray, out RaycastHit hit,time*_currentSpeed + 1f,mask))
          {
             Vector3 reflect = Vector3.Reflect(ray.direction, hit.normal);
             transform.LookAt(transform.position + reflect);

@@ -6,12 +6,10 @@ using _GAME.Scripts.Pools;
 using _GAME.Scripts.Systems;
 using _GAME.Scripts.Systems.Tick;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace _GAME.Scripts.Cannon
 {
-    public class ShootController : MonoBehaviour, IPoolClaimer, ITickableSystemClaimer, IComponentInitializer,
-        ITickableComponent
+    public class ShootController : MonoBehaviour, IPoolClaimer, ITickableSystemClaimer, IComponentInitializer
     {
         [SerializeField] private CameraFeedback cameraFeedback;
         private PoolHandler _pool;
@@ -27,45 +25,32 @@ namespace _GAME.Scripts.Cannon
         public void ClaimTickableSystem(TickableSystem tickableSystem)
         {
             _tickableSystem = tickableSystem;
-            _tickableSystem.AddToList(this);
         }
 
         public void Initialize()
         {
             _trajectory = GetComponentInChildren<CannonTrajectory>();
             _cannonVisualView = GetComponentInChildren<CannonVisualView>();
+            InputListener.InputListener.OnTouchBegan += Shoot;
         }
 
-        public void Tick(float time)
+        private void Shoot()
         {
-            if (EventSystem.current.IsPointerOverGameObject())
+            var bulletPool = _pool.GetPool<BulletsPool>();
+            var bullet = bulletPool.GetItem() as BulletLogic;
+
+            if (bullet != null)
             {
-                return;
-            }
-            
-            if (Input.touchCount > 1)
-            {
-                var touch = Input.GetTouch(1);
-                if (touch.phase == TouchPhase.Began)
-                {
-                    var bulletPool = _pool.GetPool<BulletsPool>();
-                    var bullet = bulletPool.GetItem() as BulletLogic;
-            
-                    if (bullet != null)
-                    {
-                        cameraFeedback.ShakeCamera();
-                        VisualShoot();
-                
-                        _tickableSystem.AddToList(bullet);
-                        var power = _trajectory.Power;
-                        var direction = _trajectory.GetTrajectoryPositions();
-                        bullet.Shoot(direction, power);
-                
-                        bullet.OnDie += OnDieEvent;
-                        bullet.OnRicochet += OnRicochetEvent;
-                    }
-                }
-               
+                cameraFeedback.ShakeCamera();
+                VisualShoot();
+
+                _tickableSystem.AddToList(bullet);
+                var power = _trajectory.Power;
+                var direction = _trajectory.GetTrajectoryPositions();
+                bullet.Shoot(direction, power);
+
+                bullet.OnDie += OnDieEvent;
+                bullet.OnRicochet += OnRicochetEvent;
             }
         }
 
